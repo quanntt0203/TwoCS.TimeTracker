@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="7.6.102" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="2.1.0" />
   </ItemGroup>
@@ -18,6 +19,13 @@
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TwoCS.TimeTracker.Authorization\TwoCS.TimeTracker.Authorization.csproj" />
+    <ProjectReference Include="..\TwoCS.TimeTracker.Service\TwoCS.TimeTracker.Service.csproj" />
+    <ProjectReference Include="..\TwoCS.TimeTracker.Storage\TwoCS.TimeTracker.Data.csproj" />
+    <ProjectReference Include="..\TwoCS.TimeTracker.WebApi\TwoCS.TimeTracker.WebApi.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

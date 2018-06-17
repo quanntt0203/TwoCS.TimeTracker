@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Managers\" />
+    <Folder Include="Admins\" />
+    <Folder Include="Mappers\" />
+    <Folder Include="Reports\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TwoCS.TimeTracker.Core\TwoCS.TimeTracker.Core.csproj" />
+    <ProjectReference Include="..\TwoCS.TimeTracker.Domain\TwoCS.TimeTracker.Domain.csproj" />
+    <ProjectReference Include="..\TwoCS.TimeTracker.Mapper\TwoCS.TimeTracker.Mapper.csproj" />
+  </ItemGroup>
+
+</Project>

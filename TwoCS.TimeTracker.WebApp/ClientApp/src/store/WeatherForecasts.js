@@ -4,14 +4,14 @@ const initialState = { forecasts: [], isLoading: false };
 
 export const actionCreators = {
   requestWeatherForecasts: startDateIndex => async (dispatch, getState) => {    
-    if (startDateIndex === getState().weatherForecasts.startDateIndex) {
+      if (startDateIndex === getState().weatherForecastsX.startDateIndex) {
       // Don't issue a duplicate request (we already have or are loading the requested data)
       return;
     }
 
     dispatch({ type: requestWeatherForecastsType, startDateIndex });
 
-    const url = `api/SampleData/WeatherForecasts?startDateIndex=${startDateIndex}`;
+    const url = 'api/SampleData/WeatherForecasts?startDateIndex=${startDateIndex}';
     const response = await fetch(url);
     const forecasts = await response.json();
 
