@@ -33,7 +33,7 @@
         [HttpGet()]
         public async Task<IActionResult> Search()
         {
-            var result = await _projectService.SearchAsync();
+            var result = await _projectService.SearchAsync(User.Identity.Name);
 
             return ResultOk(result);
         }

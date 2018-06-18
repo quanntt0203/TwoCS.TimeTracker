@@ -1,5 +1,7 @@
 ﻿namespace TwoCS.TimeTracker.Mapper
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using AutoMapper;
     using TwoCS.TimeTracker.Domain.Models;
     using TwoCS.TimeTracker.Dto;
@@ -13,9 +15,14 @@
             CreateMap<User, UserDto>()
                 .ForMember(x => x.IsValid, opt => opt.Ignore())
                 .ForMember(x => x.Errors, opt => opt.Ignore())
+                .ForMember(x => x.AssignedMembers, opt => opt.Ignore())
+                .ForMember(x => x.AssignedProjects, opt => opt.Ignore())
                 .AfterMap((src, dest) =>
                 {
                     //TODO
+                    dest.AssignedMembers = src.AssignedMembers.Select(s => s.ToDto());
+
+                    dest.AssignedProjects = src.AssignedProjects.Select(s => s.ToDto());
                 });
             #endregion
 
@@ -23,7 +30,7 @@
             CreateMap<RegisterUserDto, User>()
               .AfterMap((src, dest) =>
               {
-                    dest.Roles = new System.Collections.Generic.List<string> { src.Role ?? "User" };
+                    dest.Roles = new List<string> { src.Role ?? "User" };
                 });
             #endregion
         }

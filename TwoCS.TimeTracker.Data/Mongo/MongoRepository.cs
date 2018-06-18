@@ -54,7 +54,7 @@
         {
             var filter = pression ?? Builders<T>.Filter.Empty;
             return Collection.Find(filter)
-                .ToEnumerable();
+                .ToList();
         }
 
         public async override Task<IEnumerable<T>> ReadAllAsync(Expression<Func<T, bool>> pression = null)
@@ -63,13 +63,13 @@
 
             var result = await Collection.FindAsync(filter);
 
-            return result.ToList<T>();
+            return await result.ToListAsync();
         }
 
         public async override Task<T> ReadAsync(string key)
         {
-            return (await Collection.FindAsync(s => s.Id == key))
-               .SingleOrDefault();
+            return await (await Collection.FindAsync(s => s.Id == key))
+               .SingleOrDefaultAsync();
         }
 
         public override T Single(Expression<Func<T, bool>> pression)
@@ -82,8 +82,8 @@
         public async override Task<T> SingleAsync(Expression<Func<T, bool>> pression)
         {
             var filter = pression ?? Builders<T>.Filter.Empty;
-            return (await Collection.FindAsync(filter))
-                .SingleOrDefault();
+            return await (await Collection.FindAsync(filter))
+                .SingleOrDefaultAsync();
         }
 
         public override T Update(T model)

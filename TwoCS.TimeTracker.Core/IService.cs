@@ -1,6 +1,8 @@
 ﻿namespace TwoCS.TimeTracker.Core
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using TwoCS.TimeTracker.Domain.Models;
 
@@ -28,5 +30,9 @@
         IEnumerable<T> ReadAll();
 
         Task<IEnumerable<T>> ReadAllAsync();
+
+        IEnumerable<T> ReadAll(Expression<Func<T, bool>> pression = null);
+
+        Task<IEnumerable<T>> ReadAllAsync(Expression<Func<T, bool>> pression = null);
     }
 }

@@ -1,20 +1,20 @@
-using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using TwoCS.TimeTracker.Authorization.Extensions;
-using TwoCS.TimeTracker.Authorization.Migrations;
-using TwoCS.TimeTracker.Core.Extensions;
-using TwoCS.TimeTracker.Core.Factories;
-using TwoCS.TimeTracker.Data;
-using TwoCS.TimeTracker.Services;
-using TwoCS.TimeTracker.WebApi.Authorizations;
-
 namespace TwoCS.TimeTracker.WebApp
 {
+    using FluentValidation.AspNetCore;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using TwoCS.TimeTracker.Authorization.Extensions;
+    using TwoCS.TimeTracker.Authorization.Migrations;
+    using TwoCS.TimeTracker.Core.Extensions;
+    using TwoCS.TimeTracker.Core.Factories;
+    using TwoCS.TimeTracker.Data;
+    using TwoCS.TimeTracker.Services;
+    using TwoCS.TimeTracker.WebApi.Authorizations;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -34,7 +34,7 @@ namespace TwoCS.TimeTracker.WebApp
 
             //services.AddDtoValidation(services);
 
-            var oAuthConnection = Configuration.GetValue<string>("Storage:SqlServer:OAuthTimeTracker:ConnectionString");
+            var oAuthConnection = Configuration["Storage:SqlServer:OAuthTimeTracker:ConnectionString"];
 
             services.AddOAuth(oAuthConnection);
 
@@ -74,6 +74,8 @@ namespace TwoCS.TimeTracker.WebApp
             //    app.UseExceptionHandler("/Error");
             //    app.UseHsts();
             //}
+
+           
 
             app.UseOAuth();
 

@@ -21,6 +21,35 @@ namespace TwoCS.TimeTracker.Services
             _proxyOAuthUri =  new Uri("http://localhost:8000");
         }
 
+        public async Task<JObject> AddAccountToRoletAsync(string userName, string roleName)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = _proxyOAuthUri;
+
+                var dto = new { UserName = userName, Role = roleName };
+
+                var request = new HttpRequestMessage(HttpMethod.Post, "/api/account/roles")
+                {
+                    Content = dto.ObjToHttpContent()
+                };
+
+                var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
+
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+
+                    throw new BadRequestException(response.StatusCode.ToString(), new string[] { response.ReasonPhrase });
+                }
+
+                var content = await response.Content.ReadAsStringAsync();
+
+                var payload = JObject.Parse(content);
+
+                return payload;
+            }
+        }
+
         public async  Task<JObject> CreateAccountAsync(RegisterUserDto dto)
         {
             using (var client = new HttpClient())

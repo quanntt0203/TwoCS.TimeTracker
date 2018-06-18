@@ -16,6 +16,10 @@ import {
     Form
 } from "react-bootstrap";
 
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+import 'react-datepicker/dist/react-datepicker.css';
+
 import 'react-dropdown/style.css'
 import "./dialog-ui.css";
 
@@ -36,16 +40,19 @@ class TimeTracker extends Component {
             isDialogOpen: false,
             selectedProject: '',
             //============= record info
+            minTime: moment(),
             taskName: 'dgdgd dfdfd',
             taskDescription: 'dfd dfdfdf',
-            startTime: new Date().toDateString(),
-            endTime: new Date(new Date().getTime() + (5 * 24 * 60 * 60 * 1000)).toDateString()
+            startTime: moment(),
+            endTime: moment()
         };
 
         this.handleCloseDialog = this.handleCloseDialog.bind(this);
         this.handleSubmitRecord = this.handleSubmitRecord.bind(this);
         this.handleChangeRecord = this.handleChangeRecord.bind(this);
         this.handleProjectChange = this.handleProjectChange.bind(this);
+        this.handleChangeStartTime = this.handleChangeStartTime.bind(this);
+        this.handleChangeEndTime = this.handleChangeEndTime.bind(this);
     }
 
     openDialog = (e) => this.setState({ isDialogOpen: true })
@@ -58,18 +65,37 @@ class TimeTracker extends Component {
 
         this.setState({ selectedProject: selectedItem.label });
 
-        //const { outProject } = this.state;
-
-        //alert(projectValue);
+        const pageIndex = parseInt(this.props.match.params.pageIndex) || 1;
 
         var params = {
-            project: projectValue
+            project: projectValue,
+            pageIndex: pageIndex
         };
+
+        
 
         this.props.requestRecordList(params);
     }
 
+    handleChangeStartTime(date, e) {
+
+        this.setState({ startTime: date });
+        
+        const { endTime } = this.state;
+
+        if (endTime.date() < date.date()) {
+
+            this.setState({ endTime: date });
+        }
+    }
+
+    handleChangeEndTime(date, e) {
+
+        this.setState({ endTime: date });
+    }
+
     handleChangeRecord(e) {
+
         this.setState({ [e.target.name]: e.target.value });
     }
 
@@ -85,43 +111,6 @@ class TimeTracker extends Component {
         };
 
         this.props.requestRecordAdd(params);
-    }
-
-    handleUserLogTime(recordId) {
-
-        debugger
-
-        this.props.history.push("/trackers/".concat(recordId))
-
-        //var confirm = prompt("Log time on this record:", recordName);
-
-        //if (confirm) {
-        //    this.handlePromote(recordId, confirm);
-        //}
-
-        //this.setState({ promoteUser: username });
-        //this.openDialog();
-    }
-
-    handleLogTime(recordId = '', confirm = '') {
-        const infos = confirm.split(' ');
-        const duration = infos[1]
-            , idx = confirm.indexOf(duration)
-            , remark = confirm.substring(idx);
-
-        const confirmed = recordId.length > 0
-            && duration > 0
-            && remark.length > 0;
-
-        if (confirmed === true) {
-            var params = {
-                timeRecordId: recordId,
-                duration: duration,
-                remark: remark
-            };
-
-            this.props.requestTrackerAdd(params);
-        }
     }
 
     componentWillMount() {
@@ -148,19 +137,6 @@ class TimeTracker extends Component {
 
             this.handleCloseDialog();
         }
-
-        //if (props.tracker) {
-        //    var params = {
-        //        project: this.state.selectedProject
-        //    };
-
-        //    this.props.requestRecordList(params);
-        //}
-
-        //if (props.projects) {
-        //    //this.setState({ projects: props.projects});
-        //    this.renderProjectList(props);
-        //}
     }
 
 
@@ -181,6 +157,17 @@ class TimeTracker extends Component {
                 <br />
             </div>
         );
+    }
+
+    renderPagination(props) {
+        const prevStartDateIndex = (props.startDateIndex || 0) - 5;
+        const nextStartDateIndex = (props.startDateIndex || 0) + 5;
+
+        return (<p className='clearfix text-center'>
+            <Link className='btn btn-default pull-left' to={`/fetchdata/${prevStartDateIndex}`}>Previous</Link>
+            <Link className='btn btn-default pull-right' to={`/fetchdata/${nextStartDateIndex}`}>Next</Link>
+            {props.isLoading ? <span>Loading...</span> : []}
+        </p>);
     }
 
     renderRecordsTable(props) {
@@ -273,14 +260,18 @@ class TimeTracker extends Component {
                                     <InputGroup.Addon>
                                         <Glyphicon glyph="calendar" />
                                     </InputGroup.Addon>
-                                    <FormControl
-                                        type="text"
+                                    <DatePicker
                                         name="startTime"
-                                        placeholder="Start time"
-                                        value={this.state.startTime}
-                                        onChange={this.handleChangeRecord}
+                                        selected={this.state.startTime}
+                                        onChange={this.handleChangeStartTime}
+                                        minDate={this.state.minTime}
+                                        placeholderText="Select start date"
+                                        isClearable={true}
+                                        showDisabledMonthNavigation
                                     />
+                                    
                                 </InputGroup>
+                               
                             </FormGroup>
 
                             <FormGroup>
@@ -288,12 +279,15 @@ class TimeTracker extends Component {
                                     <InputGroup.Addon>
                                         <Glyphicon glyph="calendar" />
                                     </InputGroup.Addon>
-                                    <FormControl
-                                        type="text"
+                                   
+                                    <DatePicker
                                         name="endTime"
-                                        placeholder="End time"
-                                        value={this.state.endTime}
-                                        onChange={this.handleChangeRecord}
+                                        selected={this.state.endTime}
+                                        onChange={this.handleChangeEndTime}
+                                        minDate={this.state.startTime}
+                                        placeholderText="Select end date"
+                                        isClearable={true}
+                                        showDisabledMonthNavigation
                                     />
                                 </InputGroup>
                             </FormGroup>

@@ -8,6 +8,10 @@
 
         public string Email { get; set; }
 
-        public List<string> Roles { get; set; }
+        public IEnumerable<string> Roles { get; set; }
+
+        public IEnumerable<UserDto> AssignedMembers { get; set; }
+
+        public IEnumerable<ProjectDto> AssignedProjects { get; set; }
     }
 }

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Net.Http;
-using Microsoft.AspNetCore.Http;
-
-namespace TwoCS.TimeTracker.Domain.Models
+﻿namespace TwoCS.TimeTracker.Domain.Models
 {
+    using Microsoft.AspNetCore.Http;
+
     public class ModelBase : IModel<string>
     {
-        public ModelBase()
-        {
-            
-        }
+        public ModelBase() { }
         public virtual string Id { get; set; }
-        public virtual IAudit<string> Audit { get; set; }
+        public virtual AuditBase Audit { get; set; }
 
         public void SetAudit(HttpContext appContext)
         {

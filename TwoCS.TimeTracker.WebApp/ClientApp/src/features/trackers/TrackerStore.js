@@ -98,12 +98,12 @@ export const actionCreators = {
 
         let query = '';
         if (params.project) {
-            query = '?project='.concat(params.project);
+            query = `?project=${params.project}&page=${params.pageIndex}`;
         }   
 
         dispatch({ type: requestRecordListType });
 
-        const end_point = `/api/tracker`.concat(query);
+        const end_point = `/api/tracker${query}`;
         const response = await request({
             url: `${end_point}`,
             method: "GET",
@@ -287,7 +287,8 @@ export const reducer = (state, action) => {
         return {
             ...state,
             loading: true,
-            records: []
+            records: [],
+            message: null
         };
     }
 

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
     using TwoCS.TimeTracker.Core.Factories;
@@ -9,15 +10,18 @@
 
     public class ServiceBase<T> : IService<T> where T : ModelBase
     {
-        protected readonly HttpContext AppContext;
+        protected Lazy<HttpContext> AppContext => new Lazy<HttpContext>(() =>
+        {
+            return ResolverFactory.GetService<IHttpContextAccessor>().HttpContext;
+        });
 
         protected string UUID => Guid.NewGuid().ToString();
 
         protected readonly IRepository<T> Repository;
 
         public ServiceBase()
+            :this(ResolverFactory.GetService<IRepository<T>>())
         {
-            AppContext = ResolverFactory.GetService<IHttpContextAccessor>().HttpContext;
         }
 
         public ServiceBase(IRepository<T> repository)
@@ -73,6 +77,16 @@
         public virtual async Task<T> UpdateAsync(T model)
         {
             return await Repository.UpdateAsync(model);
+        }
+
+        public IEnumerable<T> ReadAll(Expression<Func<T, bool>> pression = null)
+        {
+            return Repository.ReadAll(pression);
+        }
+
+        public Task<IEnumerable<T>> ReadAllAsync(Expression<Func<T, bool>> pression = null)
+        {
+            return Repository.ReadAllAsync(pression);
         }
     }
 }

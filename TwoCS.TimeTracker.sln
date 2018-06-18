@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwoCS.TimeTracker.Dto", "Tw
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwoCS.TimeTracker.Core", "TwoCS.TimeTracker.Core\TwoCS.TimeTracker.Core.csproj", "{9517718F-F9D1-4D08-902D-A71FD50E0313}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwoCS.TimeTracker.Data", "TwoCS.TimeTracker.Storage\TwoCS.TimeTracker.Data.csproj", "{60FB44F3-4EF5-4E4C-A3E9-1128B10216D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwoCS.TimeTracker.Data", "TwoCS.TimeTracker.Data\TwoCS.TimeTracker.Data.csproj", "{60FB44F3-4EF5-4E4C-A3E9-1128B10216D7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwoCS.TimeTracker.Service", "TwoCS.TimeTracker.Service\TwoCS.TimeTracker.Service.csproj", "{EC4AC413-5064-4A8F-B950-F0C0EE508937}"
 EndProject

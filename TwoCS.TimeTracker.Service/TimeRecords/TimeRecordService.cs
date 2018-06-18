@@ -7,6 +7,7 @@
     using TwoCS.TimeTracker.Core.Extensions;
     using TwoCS.TimeTracker.Core.Repositories;
     using TwoCS.TimeTracker.Core.Services;
+    using TwoCS.TimeTracker.Core.Settings;
     using TwoCS.TimeTracker.Domain.Models;
     using TwoCS.TimeTracker.Dto;
     using TwoCS.TimeTracker.Mapper;
@@ -45,7 +46,7 @@
 
             var entity = dto.ToEntity();
 
-            entity.SetAudit(AppContext);
+            entity.SetAudit(AppContext.Value);
 
             entity.ProjectId = project.Id;
 
@@ -97,9 +98,21 @@
         {
             var result = await ReadAllAsync();
 
+            var user = await _userRepository.SingleAsync(s => s.UserName == userName);
+
+            var userList = new List<string>() { userName };
+
+            bool isSuperAdmin = user.Roles.Contains(RoleSetting.ROLE_ADMIN);
+
+            if (user.Roles.Contains(RoleSetting.ROLE_MANAGER))
+            {
+                userList.AddRange(user.AssignedMembers?.Select(m => m.UserName));
+            }
+
             return result?
-                .Where(s => s.User.UserName == userName && 
-                    (string.IsNullOrEmpty(project) || s.Project.Name == project))
+                .Where(s => true.Equals(isSuperAdmin) || 
+                    (userList.Contains(s.User.UserName) && 
+                    (string.IsNullOrEmpty(project) || s.Project.Name == project)))
                 .Select(s => s.ToDto());
         }
 

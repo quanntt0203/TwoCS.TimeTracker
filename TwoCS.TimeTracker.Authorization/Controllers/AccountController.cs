@@ -55,6 +55,39 @@
             return BadRequest(ModelState);
         }
 
+        //
+        // POST: /Account/Register
+        [HttpPost("roles")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AddRole([FromBody] AddRoleViewModel model)
+        {
+            //EnsureDatabaseCreated(_applicationDbContext);
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByNameAsync(model.UserName);
+                if (user == null)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest);
+                }
+
+                var roles = await _userManager.GetRolesAsync(user);
+
+                if (roles.Contains(model.Role))
+                {
+                    return StatusCode(StatusCodes.Status409Conflict);
+                }
+
+                var roleName = string.IsNullOrEmpty(model.Role) ? "User" : model.Role;
+                await _userManager.AddToRoleAsync(user, roleName);
+
+                return Ok(user);
+            }
+
+            // If we got this far, something failed.
+            return BadRequest(ModelState);
+        }
+
+
         #region Helpers
 
         // The following code creates the database and schema if they don't exist.

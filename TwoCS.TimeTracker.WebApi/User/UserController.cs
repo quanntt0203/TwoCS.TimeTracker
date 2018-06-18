@@ -20,7 +20,7 @@
         [Authorize(Policy = "UserAdmin")]
         public async Task<IActionResult> Search()
         {
-            var result = await _userService.SearchAsync();
+            var result = await _userService.SearchAsync(User.Identity.Name);
 
             return ResultOk(result);
         }

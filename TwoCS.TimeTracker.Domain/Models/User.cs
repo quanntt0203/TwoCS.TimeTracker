@@ -8,6 +8,14 @@
 
         public string Email { get; set; }
 
-        public List<string> Roles { get; set; }
+        public string ManagerId { get; set; }
+
+        public virtual User Magager { get; set; }
+
+        public IEnumerable<string> Roles { get; set; }
+
+        public IEnumerable<User> AssignedMembers { get; set; }
+
+        public IEnumerable<Project> AssignedProjects { get; set; }
     }
 }
