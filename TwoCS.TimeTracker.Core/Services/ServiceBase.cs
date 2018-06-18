@@ -1,12 +1,24 @@
 ﻿namespace TwoCS.TimeTracker.Core.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Http;
+    using TwoCS.TimeTracker.Core.Factories;
     using TwoCS.TimeTracker.Domain.Models;
 
     public class ServiceBase<T> : IService<T> where T : ModelBase
     {
+        protected readonly HttpContext AppContext;
+
+        protected string UUID => Guid.NewGuid().ToString();
+
         protected readonly IRepository<T> Repository;
+
+        public ServiceBase()
+        {
+            AppContext = ResolverFactory.GetService<IHttpContextAccessor>().HttpContext;
+        }
 
         public ServiceBase(IRepository<T> repository)
         {

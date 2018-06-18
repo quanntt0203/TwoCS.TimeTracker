@@ -2,11 +2,21 @@
 {
     using System;
 
-    public class AuditBase : IAudit<long>
+    public class AuditBase : IAudit<string>
     {
-        public long CreatedBy { get; set; }
-        public DateTime? CreatedDate { get; set; }
-        public long ModifiedBy { get; set; }
-        public DateTime? ModifiedDate { get; set; }
+        public AuditBase():this(null)
+        {
+
+        }
+
+        public AuditBase(string createdBy)
+        {
+            CreatedBy = createdBy;
+        }
+
+        public string CreatedBy { get; set; }
+        public string ModifiedBy { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime ModifiedDate { get; set; }
     }
 }

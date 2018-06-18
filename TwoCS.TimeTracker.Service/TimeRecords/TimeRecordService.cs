@@ -1,5 +1,6 @@
 ﻿namespace TwoCS.TimeTracker.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -32,9 +33,9 @@
         public async Task<TimeRecordDto> CreateAsync(string userName, AddTimeRecordDto dto)
         {
 
-            var project = await _projectRepository.ReadAsync(dto.ProjectId);
+            var project = await _projectRepository.SingleAsync(s => s.Name == dto.ProjectId);
 
-            var user = await _userRepository.SingleAsync(s => s.Email == userName);
+            var user = await _userRepository.SingleAsync(s => s.UserName == userName);
 
             if (project == null ||
                 user == null)
@@ -44,9 +45,17 @@
 
             var entity = dto.ToEntity();
 
+            entity.SetAudit(AppContext);
+
+            entity.ProjectId = project.Id;
+
             entity.Project = project;
 
+            entity.UserId = user.Id;
+
             entity.User = user;
+
+            entity.LogTimeRecords = new List<LogTimeRecord>();
 
             entity = await CreateAsync(entity);
 
@@ -57,7 +66,7 @@
         {
             var record = await Repository.ReadAsync(dto.TimeRecordId);
 
-            var user = await _userRepository.SingleAsync(s => s.Email == userName);
+            var user = await _userRepository.SingleAsync(s => s.UserName == userName);
 
             if (record == null ||
                 user ==  null)
@@ -67,23 +76,38 @@
 
             var logTimeEntity = dto.ToEntity();
 
+            logTimeEntity.Id = UUID;
+
             logTimeEntity.UserId = user.Id;
 
             logTimeEntity.User = user;
 
-            logTimeEntity.TimeRecord = record;
+            var logTimeRecords = record.LogTimeRecords ?? new List<LogTimeRecord>();
 
-            logTimeEntity = await _logTimeRecordRepository.CreateAsync(logTimeEntity);
+            logTimeRecords.Add(logTimeEntity);
+
+            record.LogTimeRecords = logTimeRecords;
+
+            await UpdateAsync(record);
 
             return logTimeEntity?.ToDto();
         }
 
-        public async Task<IEnumerable<TimeRecordDto>> SearchAsync(string userName)
+        public async Task<IEnumerable<TimeRecordDto>> SearchAsync(string userName, string project)
         {
             var result = await ReadAllAsync();
 
-            return result?.Select(s => s.ToDto());
+            return result?
+                .Where(s => s.User.UserName == userName && 
+                    (string.IsNullOrEmpty(project) || s.Project.Name == project))
+                .Select(s => s.ToDto());
         }
 
+        public async Task<TimeRecordDto> DetailAsync(string guid)
+        {
+            var result = await ReadAsync(guid);
+
+            return result?.ToDto();
+        }
     }
 }

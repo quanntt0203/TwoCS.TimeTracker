@@ -1,6 +1,7 @@
 ﻿namespace TwoCS.TimeTracker.Dto
 {
     using System;
+    using System.Collections.Generic;
 
     public class TimeRecordDto : DtoBase
     {
@@ -25,5 +26,7 @@
         public virtual ProjectDto Project { get; set; }
 
         public virtual UserDto User { get; set; }
+
+        public List<LogTimeRecordDto> LogTimeRecords { get; set; }
     }
 }

@@ -50,8 +50,6 @@
             }
         }
 
-        public virtual TimeRecordDto TimeRecord { get; set; }
-
         public virtual UserDto User { get; set; }
     }
 }

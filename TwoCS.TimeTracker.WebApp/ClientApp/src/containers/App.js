@@ -45,6 +45,11 @@ const AsyncTracker = Loadable({
     loading: Loading
 });
 
+const AsyncTrackerDetail = Loadable({
+    loader: () => import("../features/trackers/pages/timeTrackerDetail"),
+    loading: Loading
+});
+
 export default () => (
     <Switch>
         <Route exact path="/">
@@ -61,7 +66,10 @@ export default () => (
         <LayoutRoute exact path="/projects" component={AsyncProject} />
         <LayoutRoute exact path="/projects-add" component={AsyncProjectAdd} />
         <LayoutRoute exact path="/users" component={AsyncUserList} />
-        <LayoutRoute exact path="/trackers" component={AsyncTracker} />
+        <LayoutRoute path="/trackers" component={AsyncTracker}>
+            <LayoutRoute path="/trackers-detail" component={AsyncTrackerDetail} />
+        </LayoutRoute>
+        <LayoutRoute path="/trackers-detail" component={AsyncTrackerDetail} />
 
         <LayoutRoute component={AsyncHome} Redirect="/home" />
 

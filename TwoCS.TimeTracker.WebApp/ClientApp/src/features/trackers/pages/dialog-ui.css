@@ -1,0 +1,140 @@
+﻿.ui-dialog-overlay {
+    background: #aaa;
+    opacity: .3;
+    filter: Alpha(Opacity=30);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100
+}
+
+.ui-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    outline: 0 none;
+    padding: 0 !important;
+    z-index: 101;
+    background-color: #fff;
+    border: 1px solid #f6f6f6
+}
+
+    .ui-dialog.maximized {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important
+    }
+
+    .ui-dialog.minimized {
+        position: fixed;
+        bottom: 0;
+        right: 0
+    }
+
+    .ui-dialog .ui-dialog-titlebar {
+        position: relative;
+        font-size: 1em;
+        border-radius: 3px;
+        padding: .5em;
+        height: 35px;
+        border-bottom: 1px solid #f6f6f6
+    }
+
+    .ui-dialog.react-draggable .ui-dialog-titlebar {
+        cursor: move
+    }
+
+    .ui-dialog .ui-dialog-titlebar .action-items {
+        float: right;
+        position: relative
+    }
+
+    .ui-dialog .ui-dialog-titlebar .title {
+        float: left;
+        margin-right: .5em;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 1.5em
+    }
+
+.icon {
+    width: 24px;
+    height: 24px;
+    display: block;
+    float: left;
+    margin: 5px;
+    cursor: pointer;
+    background-size: cover
+}
+
+    .icon.icon-close {
+        width: 20px;
+        height: 20px;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAATVJREFUWIW9lk1uwjAQRr9psoakrPFYONcrUhBd9gIg0UUP0UNwAS7RqvQAVOEATDdkAYKQ+GdmFSlx3rNlz+fMTc2+LAv8Nc0OiuWMXT6PRp9ZWRYg0PukGB8PShIzY1+JsAboDQBQMdeOrVTMtQbcsRVn7MvFCw2Ju3ANiYfwlBK94SkkBsNjSnjDY0gEw0MkosF9JKLDh0gkg/eRSA7vkgiBk6+EgDYEWZyEciKsIJh//f58+PzPq9qVCF32J9+BJ6G8fSaSvOvbrsp8Bp3zfAXBnEi2Atqo3SdubTi1+0TXbk8u0eeoJZMYcs6jS/g0mWgSIR0uWCJGb/eWiBksgyVSpFpviZSR+lBCI8/vSqhdJm5IZM7YJRHWWnl+aJrdpBgf2wCDm5q9xsyvq2KuZ2y//wGrYc331r9wHwAAAABJRU5ErkJggg==)
+    }
+
+    .icon.icon-minimize {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAD5JREFUWIXtzrEJACAMRNEvOJxL2buP26mFvZAuYPNfeYS7gCRJ+qwE+QBa8tYE+hvW4HgBJ/mBndwnSZJyXOCSBPdAtEO1AAAAAElFTkSuQmCC)
+    }
+
+    .icon.icon-maximize {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAANhJREFUWIXtlk0KgzAQRl+oq/ZSPUERuu3Kk+QsFreCN+h1qr1CfxY1kEo0WWQym34wGxXeA3XygVzOwAN4r8wE1IL8TbibcScosAeOkWcOkgI3wCRIiGdg+zWIpgFeWgIpcDGBEPwJ9CUE1uCX+b71rt9Lw13sDD9pwEVigKsW3KUCOi24L9Fqwf8pEqMJb/j+apUW3C2ZrrREaMO1mvDsS8a1V6sBh9/26iSKHizLgjCUhIcEliN+sKjCYwK9NDwm4H+YagLiElOCQPb26qcGxgg8a3v18wHZFr0IMwz+CQAAAABJRU5ErkJggg==)
+    }
+
+    .icon.icon-restore {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAM5JREFUWIXt1zGKAjEYhuHHXQubPYYWeoABWw+gR9ByT7StN3AO4B5AsBG00jPYqKVg4SwEEckg46Lmrb4k8+d/i5AhvDu1IH+hV6J2hXWRW2iXqP3FDurBZA8/mEVuMgkEuhhE1mX4Rn65MLg2WQG5QPbjAQ1vkgSSQBJIAp9BPuKARcU9G5hjW3GfJ6SF4QP6jND8G4SHsC3+l3oPfXSuCfwLSSAJJIEkUL8YZ+LfBjnGRR4533AxZEHdXU+zJTZFbgqu1wim2Jf4/oU5AS86GX5Nt7fqAAAAAElFTkSuQmCC)
+    }
+
+.ui-dialog .ui-dialog-content {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    overflow: unset!important;
+    position: relative;
+    padding: .5em
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    text-align: right;
+    border-width: 1px 0 0;
+    border-top: 1px solid #f6f6f6
+}
+
+    .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+        padding: .5em
+    }
+
+    .ui-dialog .ui-dialog-buttonpane button {
+        margin: 0 .5em;
+        cursor: pointer;
+        background-color: #f6f6f6;
+        padding: .5em 1em;
+        outline: none;
+        border: 1px solid #ccc;
+        border-radius: 3px
+    }
+
+        .ui-dialog .ui-dialog-buttonpane button:hover {
+            background-color: #ccc;
+            border: 1px solid #bbb
+        }
+
+.ui-dialog .react-resizable-handle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    bottom: 0;
+    right: 0;
+    background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2IDYiIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiNmZmZmZmYwMCIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSI2cHgiIGhlaWdodD0iNnB4Ij48ZyBvcGFjaXR5PSIwLjMwMiI+PHBhdGggZD0iTSA2IDYgTCAwIDYgTCAwIDQuMiBMIDQgNC4yIEwgNC4yIDQuMiBMIDQuMiAwIEwgNiAwIEwgNiA2IEwgNiA2IFoiIGZpbGw9IiMwMDAwMDAiLz48L2c+PC9zdmc+");
+    background-position: 100% 100%;
+    padding: 0 3px 3px 0;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+    box-sizing: border-box;
+    cursor: se-resize
+}

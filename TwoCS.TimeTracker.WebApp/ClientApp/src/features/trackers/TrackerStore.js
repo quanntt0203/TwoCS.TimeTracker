@@ -6,13 +6,13 @@ const requestProjectListType = "REQUEST_PROJECT_LIST";
 const requestProjectListSuccessType = "RECEIVE_PROJECT_LIST_SUCCESS";
 const requestProjectListErrorType = "RECEIVE_PROJECT_LIST_ERROR"
 
-const requestTrackerListType = "REQUEST_TRACKER_LIST";
-const requestTrackerListSuccessType = "RECEIVE_TRACKER_LIST_SUCCESS";
-const requestTrackerListErrorType = "RECEIVE_TRACKER_LIST_ERROR";
+const requestLogTimeListType = "REQUEST_TRACKER_LIST";
+const requestLogTimeListSuccessType = "RECEIVE_TRACKER_LIST_SUCCESS";
+const requestLogTimeListErrorType = "RECEIVE_TRACKER_LIST_ERROR";
 
-const requestTrackerAddType = "REQUEST_TRACKER_ADD";
-const requestTrackerAddSuccessType = "RECEIVE_TRACKER_ADD_SUCCESS";
-const requestTrackerAddErrorType = "RECEIVE_TRACKER_ADD_ERROR";
+const requestLogTimeAddType = "REQUEST_TRACKER_ADD";
+const requestLogTimeAddSuccessType = "RECEIVE_TRACKER_ADD_SUCCESS";
+const requestLogTimeAddErrorType = "RECEIVE_TRACKER_ADD_ERROR";
 
 const requestRecordListType = "REQUEST_RECORD_LIST";
 const requestRecordListSuccessType = "RECEIVE_RECORD_LIST_SUCCESS";
@@ -22,8 +22,12 @@ const requestRecordAddType = "REQUEST_RECORD_ADD";
 const requestRecordAddSuccessType = "RECEIVE_RECORD_ADD_SUCCESS";
 const requestRecordAddErrorType = "RECEIVE_RECORD_ADD_ERROR";
 
+const requestRecordDetailType = "REQUEST_RECORD_DETAIL";
+const requestRecordDetailSuccessType = "RECEIVE_RECORD_DETAIL_SUCCESS";
+const requestRecordDetailErrorType = "RECEIVE_RECORD_DETAIL_ERROR";
 
-const initialState = { projects: [], records: [], record: null, trackers: [], tracker: null, loading: false, message: null };
+
+const initialState = { projects: [], records: [], record: null, logTime: null, loading: false, message: null };
 
 export const actionCreators = {
     requestProjectList: params => async (dispatch, getState) => {
@@ -55,14 +59,14 @@ export const actionCreators = {
             });
         }
     },
-    requestTrackerList: params => async (dispatch, getState) => {
+    requestLogTimeList: params => async (dispatch, getState) => {
 
         let query = '';
         if (params.record) {
             query = '?record='.concat(params.record);
         }   
 
-        dispatch({ type: requestTrackerListType });
+        dispatch({ type: requestLogTimeListType });
 
         const end_point = `/api/tracker/logtimes`.concat(query);
         const response = await request({
@@ -75,13 +79,13 @@ export const actionCreators = {
         if (response.data.message === 'Ok') {
             const result = response.data.result;
             dispatch({
-                type: requestTrackerListSuccessType,
+                type: requestLogTimeListSuccessType,
                 data: result
             });
         }
         else {
             dispatch({
-                type: requestTrackerListErrorType,
+                type: requestLogTimeListErrorType,
                 message: {
                     type: "ERROR",
                     content: response.data.message,
@@ -125,11 +129,47 @@ export const actionCreators = {
             });
         }
     },
+    requestRecordDetail: params => async (dispatch, getState) => {
+
+        let query = '';
+        if (!params.recordId) {
+            return;
+        }
+
+        query = '/'.concat(params.recordId);
+
+        dispatch({ type: requestRecordDetailType });
+
+        const end_point = `/api/tracker`.concat(query);
+        const response = await request({
+            url: `${end_point}`,
+            method: "GET",
+            baseURL: config.apiGateway.API_URL
+        });
+
+        if (response.data.message === 'Ok') {
+            const result = response.data.result;
+            dispatch({
+                type: requestRecordDetailSuccessType,
+                data: result
+            });
+        }
+        else {
+            dispatch({
+                type: requestRecordDetailErrorType,
+                message: {
+                    type: "ERROR",
+                    content: response.data.message,
+                    errors: response.data.errors
+                }
+            });
+        }
+    },
     requestRecordAdd: params => async (dispatch, getState) => {
 
         dispatch({ type: requestRecordAddType });
 
-        const end_point = `/api/tracker/records`;
+        const end_point = `/api/tracker`;
         const response = await request({
             url: `${end_point}`,
             method: "POST",
@@ -156,11 +196,11 @@ export const actionCreators = {
             });
         }
     },
-    requestTrackerAdd: params => async (dispatch, getState) => {
+    requestLogTimeAdd: params => async (dispatch, getState) => {
 
-        dispatch({ type: requestTrackerAddType });
+        dispatch({ type: requestLogTimeAddType });
 
-        const end_point = `/api/tracker`;
+        const end_point = `/api/tracker/logtimes`;
         const response = await request({
             url: `${end_point}`,
             method: "POST",
@@ -172,13 +212,13 @@ export const actionCreators = {
         if (response.data.message === 'Ok') {
             const result = response.data.result;
             dispatch({
-                type: requestTrackerAddSuccessType,
+                type: requestLogTimeAddSuccessType,
                 data: result
             });
         }
         else {
             dispatch({
-                type: requestTrackerAddErrorType,
+                type: requestLogTimeAddErrorType,
                 message: {
                     type: "ERROR",
                     content: response.data.message,
@@ -218,7 +258,7 @@ export const reducer = (state, action) => {
     }
 
     // list traker
-    if (action.type === requestTrackerListType) {
+    if (action.type === requestLogTimeListType) {
         return {
             ...state,
             loading: true,
@@ -226,7 +266,7 @@ export const reducer = (state, action) => {
         };
     }
 
-    if (action.type === requestTrackerListSuccessType) {
+    if (action.type === requestLogTimeListSuccessType) {
         return {
             ...state,
             loading: false,
@@ -234,7 +274,7 @@ export const reducer = (state, action) => {
         };
     }
 
-    if (action.type === requestTrackerListErrorType) {
+    if (action.type === requestLogTimeListErrorType) {
         return {
             ...state,
             loading: false,
@@ -268,6 +308,35 @@ export const reducer = (state, action) => {
         };
     }
 
+    // record detail
+    if (action.type === requestRecordDetailType) {
+        return {
+            ...state,
+            loading: true,
+            record: null
+        };
+    }
+
+    if (action.type === requestRecordDetailSuccessType) {
+
+        return {
+            ...state,
+            loading: false,
+            record: action.data
+        };
+    }
+
+    if (action.type === requestRecordDetailErrorType) {
+        return {
+            ...state,
+            loading: false,
+            message: action.message,
+            record: null
+        };
+    }
+    
+    
+
     // add record
     if (action.type === requestRecordAddType) {
         return {
@@ -278,10 +347,14 @@ export const reducer = (state, action) => {
     }
 
     if (action.type === requestRecordAddSuccessType) {
+
+        const { records } = state;
+        records.push(action.data);
+
         return {
             ...state,
             loading: false,
-            record: action.data
+            records: records
         };
     }
 
@@ -295,28 +368,38 @@ export const reducer = (state, action) => {
     }
 
     // add tracker
-    if (action.type === requestTrackerAddType) {
+    if (action.type === requestLogTimeAddType) {
         return {
             ...state,
             loading: true,
-            tracker: null
+            message: null,
+            logTime: null
         };
     }
 
-    if (action.type === requestTrackerAddSuccessType) {
-        return {
-            ...state,
-            loading: false,
-            tracker: action.data
-        };
+    if (action.type === requestLogTimeAddSuccessType) {
+
+        const { record } = state;
+
+        if (record) {
+
+            record.duration += action.data.duration;
+            record.logTimeRecords.push(action.data);
+
+            return {
+                ...state,
+                loading: false,
+                logTime: action.data
+            };
+        }
     }
 
-    if (action.type === requestTrackerAddErrorType) {
+    if (action.type === requestLogTimeAddErrorType) {
         return {
             ...state,
             loading: false,
             message: action.message,
-            tracker: null
+            logTime: null
         };
     }
 

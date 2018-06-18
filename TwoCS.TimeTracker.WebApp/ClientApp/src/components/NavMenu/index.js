@@ -44,4 +44,4 @@ export default props => (
       </Navbar.Collapse>
     </Navbar>
   </div>
-)(NavMenu);
+);

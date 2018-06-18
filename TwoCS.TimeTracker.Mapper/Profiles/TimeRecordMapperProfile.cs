@@ -1,5 +1,7 @@
 ﻿namespace TwoCS.TimeTracker.Mapper
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using AutoMapper;
     using Domain.Models;
     using Dto;
@@ -17,14 +19,16 @@
                 {
                     //TODO
                     //dest.Duration = (int)(src.EndTime.HasValue ? (src.StartTime - src.EndTime.Value).TotalHours : 0);
+                    dest.LogTimeRecords = (src.LogTimeRecords?.Select(s => s.ToDto()).ToList()) ?? new List<LogTimeRecordDto>();
+                    dest.Duration = (src.LogTimeRecords?.Sum(s => s.Duration) ?? 0);
                 });
 
             CreateMap<LogTimeRecord, LogTimeRecordDto>()
-               .ForMember(x => x.TimeRecord, opt => opt.MapFrom(src => src.TimeRecord.ToDto()))
                .ForMember(x => x.User, opt => opt.MapFrom(src => src.User.ToDto()))
                .AfterMap((src, dest) =>
                {
                     //TODO
+                    
                });
             #endregion
 

@@ -4,8 +4,20 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from "../TrackerStore";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import Dialog from 'react-dialog'
+import Dialog from "react-dialog";
 import { fail } from "assert";
+import Dropdown from "react-dropdown";
+import {
+    FormGroup,
+    InputGroup,
+    FormControl,
+    Glyphicon,
+    Button,
+    Form
+} from "react-bootstrap";
+
+import 'react-dropdown/style.css'
+import "./dialog-ui.css";
 
 class TimeTracker extends Component {
     constructor(props) {
@@ -14,42 +26,78 @@ class TimeTracker extends Component {
             loading: false,
             projects: [],
             records: [],
-            record: null,
+            record: {
+                name: '',
+                description: ''
+            },
             message: {},
             trackers: [],
             tracker: null,
             isDialogOpen: false,
-            selectedProject: null
+            selectedProject: '',
+            //============= record info
+            taskName: 'dgdgd dfdfd',
+            taskDescription: 'dfd dfdfdf',
+            startTime: new Date().toDateString(),
+            endTime: new Date(new Date().getTime() + (5 * 24 * 60 * 60 * 1000)).toDateString()
         };
+
+        this.handleCloseDialog = this.handleCloseDialog.bind(this);
+        this.handleSubmitRecord = this.handleSubmitRecord.bind(this);
+        this.handleChangeRecord = this.handleChangeRecord.bind(this);
+        this.handleProjectChange = this.handleProjectChange.bind(this);
     }
 
-    openDialog = () => this.setState({ isDialogOpen: true })
+    openDialog = (e) => this.setState({ isDialogOpen: true })
 
-    handleClose = () => this.setState({ isDialogOpen: false })
+    handleCloseDialog = (e) => this.setState({ isDialogOpen: false })
 
-    handleProjectChange = (e) => {
+    handleProjectChange = (selectedItem) => {
 
-        this.setState({ selectedProject: e.target.value });
+        const projectValue = selectedItem.value;
 
-        const { selectedProject } = this.state;
+        this.setState({ selectedProject: selectedItem.label });
 
-        alert(this.state.selectedProject);
+        //const { outProject } = this.state;
+
+        //alert(projectValue);
 
         var params = {
-            project: selectedProject
+            project: projectValue
         };
 
         this.props.requestRecordList(params);
     }
 
+    handleChangeRecord(e) {
+        this.setState({ [e.target.name]: e.target.value });
+    }
 
-    handleUserLogTime(recordId, recordName) {
+    handleSubmitRecord(e) {
+        e.preventDefault();
 
-        var confirm = prompt("Log time on this record:", recordName);
+        var params = {
+            name: this.state.taskName,
+            description: this.state.taskDescription,
+            startTime: this.state.startTime,
+            endTime: this.state.endTime,
+            projectId: this.state.selectedProject
+        };
 
-        if (confirm) {
-            this.handlePromote(recordId, confirm);
-        }
+        this.props.requestRecordAdd(params);
+    }
+
+    handleUserLogTime(recordId) {
+
+        debugger
+
+        this.props.history.push("/trackers/".concat(recordId))
+
+        //var confirm = prompt("Log time on this record:", recordName);
+
+        //if (confirm) {
+        //    this.handlePromote(recordId, confirm);
+        //}
 
         //this.setState({ promoteUser: username });
         //this.openDialog();
@@ -92,32 +140,44 @@ class TimeTracker extends Component {
                 toast.success(props.message.content);
             }
         }
+        
 
-        if (props.record) {
-            this.props.requestRecordList();
+        if (props.records) {
+
+            this.renderRecordsTable(props);
+
+            this.handleCloseDialog();
         }
 
-        if (props.tracker) {
-            this.props.requestRecordList();
-        }
+        //if (props.tracker) {
+        //    var params = {
+        //        project: this.state.selectedProject
+        //    };
 
-        if (props.projects) {
-            this.renderProjectList(props);
-        }
+        //    this.props.requestRecordList(params);
+        //}
+
+        //if (props.projects) {
+        //    //this.setState({ projects: props.projects});
+        //    this.renderProjectList(props);
+        //}
     }
 
 
     renderProjectList(props) {
+        let options = [];
+        options.push({ value: '', label: 'All'});
+        props.projects.map((item, idx) =>
+            options.push({ value: item.name, label: item.name })
+        )
         return (
+             
             <div className="project-list">
                 Project List:
                 <br />
-                <select value={this.state.selectedProject} onChange={this.handleProjectChange}>
-                    <option value={NaN}>Select project</option>
-                    {props.projects.map((item, idx) =>
-                        <option value={item.id}>{item.name}</option>
-                        )}
-                </select>
+
+                <Dropdown options={options} onChange={this.handleProjectChange} value={this.state.selectedProject} placeholder="Select a project" />
+                
                 <br />
             </div>
         );
@@ -134,9 +194,7 @@ class TimeTracker extends Component {
                         <th>StartTime</th>
                         <th>EndTime</th>
                         <th>Duration</th>
-                        <th><Link to={"/trackers"} exact>
-                            <span className="glyphicon glyphicon-plus"></span>Add New
-                </Link></th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -149,7 +207,7 @@ class TimeTracker extends Component {
                             <td>{item.endTime}</td>
                             <td>{item.duration}</td>
                             <td>
-                                <Link to="/trackers" onClick={(e) => { this.handleUserLogTime(item.id) }}>
+                                <Link to={`/trackers-detail/${item.id}`}>
                                     <span title="Log time" className="glyphicon glyphicon-cog">
                                     </span></Link>
                                 &nbsp;|&nbsp;
@@ -165,11 +223,94 @@ class TimeTracker extends Component {
     }
 
     render() {
+        const { selectedProject } = this.state;
+        const enabled =
+            selectedProject.length > 0;
         return (
             <div className="container">
                 <h2>Time Tracker Management</h2>
                 <hr />
                 {this.renderProjectList(this.props)}
+                <Button bsStyle="primary" bsSize="medium" type="button" onClick={this.openDialog} disabled={!enabled}>Add new record</Button>
+                {
+                    this.state.isDialogOpen &&
+                    <Dialog
+                        title="Time tracker information"
+                        modal={true}
+                        onClose={this.handleCloseDialog}
+                        height={300} >
+                        <Form onSubmit={this.handleSubmitRecord}>
+                            <FormGroup>
+                                <InputGroup>
+                                    <InputGroup.Addon>
+                                        <Glyphicon glyph="info-sign" />
+                                    </InputGroup.Addon>
+                                    <FormControl
+                                        type="text"
+                                        name="taskName"
+                                        placeholder="Task name"
+                                        value={this.state.taskName}
+                                        onChange={this.handleChangeRecord}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
+                            <FormGroup>
+                                <InputGroup>
+                                    <InputGroup.Addon>
+                                        <Glyphicon glyph="edit" />
+                                    </InputGroup.Addon>
+                                    <FormControl
+                                        type="text"
+                                        name="taskDescription"
+                                        placeholder="Description"
+                                        value={this.state.taskDescription}
+                                        onChange={this.handleChangeRecord}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
+                            <FormGroup>
+                                <InputGroup>
+                                    <InputGroup.Addon>
+                                        <Glyphicon glyph="calendar" />
+                                    </InputGroup.Addon>
+                                    <FormControl
+                                        type="text"
+                                        name="startTime"
+                                        placeholder="Start time"
+                                        value={this.state.startTime}
+                                        onChange={this.handleChangeRecord}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
+
+                            <FormGroup>
+                                <InputGroup>
+                                    <InputGroup.Addon>
+                                        <Glyphicon glyph="calendar" />
+                                    </InputGroup.Addon>
+                                    <FormControl
+                                        type="text"
+                                        name="endTime"
+                                        placeholder="End time"
+                                        value={this.state.endTime}
+                                        onChange={this.handleChangeRecord}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
+
+                            <FormGroup className="text-center">
+                                <Button bsStyle="primary" bsSize="medium" type="submit" disabled={!enabled}>
+                                    Create
+                                </Button>
+                                &nbsp; &nbsp;
+                                <Button bsStyle="primary" bsSize="medium" type="button" onClick={this.handleCloseDialog}>
+                                    Cancel
+                                </Button>
+                            </FormGroup>
+                        </Form>
+                    </Dialog>
+                }
+                <hr />
                 {this.renderRecordsTable(this.props)}
             </div>
         );

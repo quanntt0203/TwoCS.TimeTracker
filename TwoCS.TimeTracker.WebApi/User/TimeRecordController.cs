@@ -44,9 +44,17 @@
         }
 
         [HttpGet()]
-        public async Task<IActionResult> Search()
+        public async Task<IActionResult> Search([FromQuery] string project)
         {
-            var result = await _timeRecordService.SearchAsync(User.Identity.Name);
+            var result = await _timeRecordService.SearchAsync(User.Identity.Name, project);
+
+            return ResultOk(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Detail(string id)
+        {
+            var result = await _timeRecordService.DetailAsync(id);
 
             return ResultOk(result);
         }

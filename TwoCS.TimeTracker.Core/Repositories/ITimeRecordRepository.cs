@@ -5,8 +5,4 @@
     public interface ITimeRecordRepository : IRepository<TimeRecord>
     {
     }
-
-    public interface ILogTimeRecordRepository : IRepository<LogTimeRecord>
-    {
-    }
 }

@@ -12,7 +12,9 @@
 
         Task<LogTimeRecordDto> LogTimeAsync(string userName, AddLogTimeRecordDto dto);
 
-        Task<IEnumerable<TimeRecordDto>> SearchAsync(string userName);
+        Task<IEnumerable<TimeRecordDto>> SearchAsync(string userName, string project);
+
+        Task<TimeRecordDto> DetailAsync(string guid);
 
     }
 }

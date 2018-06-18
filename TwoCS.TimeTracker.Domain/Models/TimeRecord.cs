@@ -1,6 +1,7 @@
 ﻿namespace TwoCS.TimeTracker.Domain.Models
 {
     using System;
+    using System.Collections.Generic;
 
     public class TimeRecord : ModelBase
     {
@@ -36,5 +37,7 @@
         public virtual Project Project { get; set; }
 
         public virtual User User { get; set; }
+
+        public virtual List<LogTimeRecord> LogTimeRecords { get; set; }
     }
 }

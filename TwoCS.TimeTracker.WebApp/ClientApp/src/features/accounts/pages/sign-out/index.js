@@ -33,11 +33,11 @@ class SignOut extends Component {
     render() {
         return (
             <Well> <Link to={"/sign-out"} exact>
-            <Glyphicon glyph="user" /> SignOut
-
+                <Glyphicon glyph="user" /> SignOut
+    
                 </Link>
-        </Well>);
-  }
+            </Well>);
+    }
 }
 
 export default connect(
