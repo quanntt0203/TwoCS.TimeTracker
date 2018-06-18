@@ -154,7 +154,7 @@
         {
             var entiry = await Repository.SingleAsync(s => s.Email == userName || s.UserName == userName);
 
-            return entiry?.Roles?.ToArray();
+            return entiry?.Roles?.ToArray() ?? new string[] { };
         }
 
         public async Task<UserDto> GetDetailAsync(string userName)

@@ -25,13 +25,11 @@
 
             await Task.Run(() =>
             {
-                //var role = context.User.Claims.Where(s => s.Type == "role").FirstOrDefault()?.Value;
                 var hasClaim = _roles.Any(s => roles.Contains(s));
                 if (!hasClaim)
                 {
                     context.Fail();
                     throw new BadRequestException("You are not authorized on this function.");
-                    //return;
                 }
                 else
                 {
