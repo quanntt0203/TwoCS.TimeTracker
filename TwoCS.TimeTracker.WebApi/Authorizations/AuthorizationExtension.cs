@@ -31,6 +31,12 @@
                     policy => policy.Requirements.Add(new RolePermissionRequirment(new string[] { RoleSetting.ROLE_USER, RoleSetting.ROLE_MANAGER })));
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ReportAdmin",
+                    policy => policy.Requirements.Add(new RolePermissionRequirment(new string[] { RoleSetting.ROLE_USER, RoleSetting.ROLE_MANAGER })));
+            });
+
             return services;
         }
     }

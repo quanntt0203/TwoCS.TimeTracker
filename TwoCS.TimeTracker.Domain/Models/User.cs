@@ -12,6 +12,8 @@
 
         public virtual User Magager { get; set; }
 
+        public virtual User BehaveOfMagager { get; set; }
+
         public IEnumerable<string> Roles { get; set; }
 
         public IEnumerable<User> AssignedMembers { get; set; }

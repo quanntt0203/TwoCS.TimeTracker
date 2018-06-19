@@ -17,14 +17,25 @@
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="Controllers\**" />
+    <Compile Remove="Pages\**" />
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="Controllers\**" />
+    <Content Remove="Pages\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Controllers\**" />
+    <EmbeddedResource Remove="Pages\**" />
+    <None Remove="Controllers\**" />
+    <None Remove="Pages\**" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TwoCS.TimeTracker.Authorization\TwoCS.TimeTracker.Authorization.csproj" />
     <ProjectReference Include="..\TwoCS.TimeTracker.Service\TwoCS.TimeTracker.Service.csproj" />
-    <ProjectReference Include="..\TwoCS.TimeTracker.Storage\TwoCS.TimeTracker.Data.csproj" />
+    <ProjectReference Include="..\TwoCS.TimeTracker.Data\TwoCS.TimeTracker.Data.csproj" />
     <ProjectReference Include="..\TwoCS.TimeTracker.WebApi\TwoCS.TimeTracker.WebApi.csproj" />
   </ItemGroup>
 

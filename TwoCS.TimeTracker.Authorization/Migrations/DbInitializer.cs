@@ -1,11 +1,12 @@
 ﻿namespace TwoCS.TimeTracker.Authorization.Migrations
 {
     using System;
-    using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.DependencyInjection;
     using TwoCS.TimeTracker.Authorization.Models;
+    using TwoCS.TimeTracker.Core.Repositories;
 
     public interface IDbInitializer
     {
@@ -26,6 +27,7 @@
         {
             using (var serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
+                
                 //create database schema if none exists
                 var context = serviceScope.ServiceProvider.GetService<OAuthDbContext>();
 
@@ -35,44 +37,11 @@
                 var _roleManager = serviceScope.ServiceProvider.GetService<RoleManager<Role>>();
                 await CreateRoles(_roleManager);
 
-                //if (!(await _roleManager.RoleExistsAsync("Administrator")))
-                //{
-                //    //Create the Administartor Role
-                //    await _roleManager.CreateAsync(new Role("Administrator"));
-                //}
-
-                //if (!(await _roleManager.RoleExistsAsync("Manager")))
-                //{
-                //    //Create the Administartor Role
-                //    await _roleManager.CreateAsync(new Role("Manager"));
-                //}
-
-                //if (!(await _roleManager.RoleExistsAsync("User")))
-                //{
-                //    //Create the Administartor Role
-                //    await _roleManager.CreateAsync(new Role("User"));
-                //}
 
                 //Create the default Admin account and apply the Administrator role
                 var _userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
-                await CreateUsers(_userManager);
+                await CreateUsers(_userManager, serviceScope);
 
-                //string userName = "admin@2cs.com";
-                //string password = "AbC!123open";
-                //var success = await _userManager.CreateAsync(new User { UserName = userName, Email = userName, EmailConfirmed = false }, password);
-                //if (success.Succeeded)
-                //{
-                //    var user = await _userManager.FindByNameAsync(userName);
-                //    await _userManager.AddToRoleAsync(user, "Administrator");
-                //}
-
-                ////Create the default Admin account and apply the Administrator role
-                //userName = "user@2cs.com";
-                //success = await _userManager.CreateAsync(new User { UserName = userName, Email = userName, EmailConfirmed = false }, password);
-                //if (success.Succeeded)
-                //{
-                //    await _userManager.AddToRoleAsync(await _userManager.FindByNameAsync(userName), "User");
-                //}
             }
         }
 
@@ -96,7 +65,7 @@
         }
 
 
-        private async Task CreateUsers(UserManager<User> userManager)
+        private async Task CreateUsers(UserManager<User> userManager, IServiceScope serviceScope)
         {
            var userRoles = new[]
            {
@@ -107,17 +76,30 @@
                 new { name = "user3", role = "User" }
            };
 
+            var userRepository = serviceScope.ServiceProvider.GetService<IUserRepository>();
+
             foreach (var userRole in userRoles)
             {
-                string userName = string.Format("{0}@2cs.com", userRole.name);
+                string userName = userRole.name;
+                string email = string.Format("{0}@2cs.com", userRole.name);
+                var role = userRole.role;
+
                 string password = "AbC!123open";
-                var success = await userManager.CreateAsync(new User { UserName = userName, Email = userName, EmailConfirmed = false }, password);
+                var success = await userManager.CreateAsync(new User { UserName = userName, Email = email, EmailConfirmed = false }, password);
                 if (success.Succeeded)
                 {
                     var user = await userManager.FindByNameAsync(userName);
-                    await userManager.AddToRoleAsync(user, userRole.role);
+                    await userManager.AddToRoleAsync(user, role);
                 }
 
+                var entityUser = new Domain.Models.User
+                {
+                    UserName = userName,
+                    Email = email,
+                    Roles = new List<string>() { role }
+                };
+
+                await userRepository.CreateAsync(entityUser);
             }
         }
     }

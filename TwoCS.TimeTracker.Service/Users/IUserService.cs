@@ -14,7 +14,7 @@
 
         Task<UserDto> PromoteManagerAsync(PromoteUserDto dto);
 
-        Task<string[]> GetRolesAsync(string userName);
+        Task<IEnumerable<string>> GetRolesAsync(string userName);
 
         Task<UserDto> GetDetailAsync(string userName);
 

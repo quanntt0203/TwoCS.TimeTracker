@@ -46,7 +46,7 @@
 
             var entity = dto.ToEntity();
 
-            entity.SetAudit(AppContext.Value);
+            //entity.SetAudit(AppContext.Value);
 
             entity.ProjectId = project.Id;
 

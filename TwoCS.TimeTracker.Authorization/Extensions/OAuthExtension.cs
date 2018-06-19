@@ -8,7 +8,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using TwoCS.TimeTracker.Authorization.Models;
 
-    public static class ServiceExtension
+    public static class OAuthExtension
     {
         public static IServiceCollection AddOAuth(this IServiceCollection services, string oAuthConnection)
         {

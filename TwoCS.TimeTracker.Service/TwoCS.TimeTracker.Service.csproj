@@ -8,7 +8,6 @@
     <Folder Include="Managers\" />
     <Folder Include="Admins\" />
     <Folder Include="Mappers\" />
-    <Folder Include="Reports\" />
   </ItemGroup>
 
   <ItemGroup>

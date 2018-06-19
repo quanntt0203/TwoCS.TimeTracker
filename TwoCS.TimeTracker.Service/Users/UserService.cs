@@ -110,9 +110,7 @@
 
 
             // temporary update members & projects as manager having
-            admin.AssignedMembers = manager.AssignedMembers;
-
-            admin.AssignedProjects = manager.AssignedProjects;
+            admin.BehaveOfMagager = manager;
 
             await Repository.UpdateAsync(admin);
 
@@ -150,11 +148,24 @@
             return users?.Select(s => s.ToDto());
         }
 
-        public async Task<string[]> GetRolesAsync(string userName)
+        public async Task<IEnumerable<string>> GetRolesAsync(string userName)
         {
-            var entiry = await Repository.SingleAsync(s => s.Email == userName || s.UserName == userName);
+            var entity = await Repository.SingleAsync(s => s.UserName == userName);
 
-            return entiry?.Roles?.ToArray() ?? new string[] { };
+            var roles = new List<string>();
+
+            if (entity != null)
+            {
+                roles.AddRange(entity.Roles);
+                if (entity.BehaveOfMagager != null)
+                {
+                    roles.AddRange(entity.BehaveOfMagager.Roles);
+                }
+            }
+
+            roles.AddRange(entity.Roles);
+
+            return roles.Distinct().ToArray();
         }
 
         public async Task<UserDto> GetDetailAsync(string userName)

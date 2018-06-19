@@ -20,9 +20,10 @@
                 .AfterMap((src, dest) =>
                 {
                     //TODO
-                    dest.AssignedMembers = src.AssignedMembers.Select(s => s.ToDto());
+                    dest.AssignedMembers = src.AssignedMembers?.Select(s => s.ToDto());
 
-                    dest.AssignedProjects = src.AssignedProjects.Select(s => s.ToDto());
+                    dest.AssignedProjects = src.AssignedProjects?.Select(s => s.ToDto());
+
                 });
             #endregion
 

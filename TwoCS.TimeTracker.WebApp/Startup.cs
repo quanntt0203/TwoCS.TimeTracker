@@ -100,7 +100,7 @@ namespace TwoCS.TimeTracker.WebApp
                 }
             });
 
-            //dbInitializer.Initialize();
+            dbInitializer.Initialize();
         }
     }
 }
