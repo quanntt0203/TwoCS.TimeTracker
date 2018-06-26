@@ -1,5 +1,6 @@
 ﻿import request from "../../shared/api/lib/request";
 import config from "../../sos-config";
+import { stat } from "fs";
 
 const requestProjectAddType = "REQUEST_PROJECT_ADD";
 const requestProjectAddSuccessType = "REQUEST_PROJECT_ADD_SUCCESS";
@@ -9,7 +10,7 @@ const requestProjectListType = "REQUEST_PROJECT_LIST";
 const requestProjectListSuccessType = "RECEIVE_PROJECT_LIST_SUCCESS";
 const requestProjectListErrorType = "RECEIVE_PROJECT_LIST_ERROR"
 
-const initialState = { projects: [], item: null, loading: false, message: null };
+const initialState = { projects: [], item: null, loading: false, message: null, project: null };
 
 export const actionCreators = {
     requestProjectAdd: params => async (dispatch, getState) => {
@@ -82,7 +83,8 @@ export const reducer = (state, action) => {
     if (action.type === requestProjectAddType) {
         return {
             ...state,
-            loading: true
+            loading: true,
+            message: null
         };
     }
 
@@ -90,7 +92,7 @@ export const reducer = (state, action) => {
         return {
             ...state,
             loading: false,
-            item: action.data
+            project: action.data
         };
     }
 
@@ -106,7 +108,9 @@ export const reducer = (state, action) => {
     if (action.type === requestProjectListType) {
         return {
             ...state,
-            loading: true
+            loading: true,
+            message: null,
+            projects: []
         };
     }
 

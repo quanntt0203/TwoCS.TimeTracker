@@ -4,12 +4,15 @@
 
     public interface IReportData
     {
-        
+        int Duration { get; set; }
+
+        bool IsMarked { get; set; }
     }
 
     public class ReportDataDto : IReportData
     {
-
+        public bool IsMarked { get; set; }
+        public int Duration { get; set; }
     }
 
     public interface IReportDto

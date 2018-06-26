@@ -10,7 +10,8 @@ export const getSubDomain = url => {
 };
 
 export const isSignedIn = () => {
-    
+
+    //debugger
     const token = getToken();
 
     if (token) {
@@ -24,3 +25,4 @@ export const getToken = () => {
     const token = localStorage.getItem("token");
     return token;
 };
+

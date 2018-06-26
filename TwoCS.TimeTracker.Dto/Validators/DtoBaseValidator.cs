@@ -7,8 +7,8 @@
     {
         public DtoBaseValidator()
         {
-            RuleFor(x => x.IsValid)
-                .Equals(true);
+            //RuleFor(x => x.IsValid)
+            //    .Equals(true);
         }
     }
 }

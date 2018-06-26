@@ -28,7 +28,7 @@
 
             if (existedProject != null)
             {
-                throw new BadRequestException("User is ready existed.");
+                throw new BadRequestException("Project is ready existed.");
             }
 
             var entity = dto.ToEntity();
@@ -53,9 +53,13 @@
 
             var user = await _userRepository.SingleAsync(s => s.UserName == userName);
 
-            bool isSuperAdmin = user.Roles.Contains(RoleSetting.ROLE_ADMIN);
+            bool isAdmin = user.Roles.Contains(RoleSetting.ROLE_ADMIN);
 
-            result = true.Equals(isSuperAdmin) ? await ReadAllAsync() : user.AssignedProjects;
+            result = true.Equals(isAdmin) ? 
+                (user.BehaveOfMagager != null ? 
+                    user.BehaveOfMagager.AssignedProjects 
+                    : await ReadAllAsync())
+                : user.AssignedProjects;
 
             result = result ?? new List<Project>();
 

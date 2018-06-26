@@ -4,8 +4,6 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from "../UserStore";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-//import Popup from "reactjs-popup";
-import Dialog from 'react-dialog'
 
 class UserList extends Component {
     constructor(props) {
@@ -13,40 +11,8 @@ class UserList extends Component {
         this.state = {
             loading: false,
             users: [],
-            message: {},
-            isDialogOpen: false,
-            promoteUser: ''
+            message: {}
         };
-    }
-
-    openDialog = () => this.setState({ isDialogOpen: true })
-
-    handleClose = () => this.setState({ isDialogOpen: false })
-
-    handleUserToPromote(userName) {
-
-        var confirm = prompt("Do you want to promote this user to ?", "Manager");
-
-        if (confirm) {
-            this.handlePromote(userName, confirm);
-        }
-
-        //this.setState({ promoteUser: username });
-        //this.openDialog();
-    }
-
-    handlePromote(userName = '', confirm = '') {
-
-        const confirmed = userName.length > 0 && confirm.length > 0;
-
-        if (confirmed === true) {
-            var params = {
-                userName: userName,
-                confirmMessage: confirm
-            };
-
-            this.props.promoteUserToManager(params);
-        }
     }
 
     componentWillMount() {
@@ -72,6 +38,7 @@ class UserList extends Component {
     }
 
     renderUsersTable(props) {
+
         return (
             <table className='table'>
                 <thead>
@@ -85,25 +52,29 @@ class UserList extends Component {
                 </Link></th>
                     </tr>
                 </thead>
-                <tbody>
-                    {props.users.map((item, idx) =>
-                        <tr key={item.id}>
-                            <td>{idx+1}</td>
-                            <td>{item.userName}</td>
-                            <td>{item.email}</td>
-                            <td>{item.roles}</td>
-                            <td>
-                                <Link to="/users" onClick={(e) => { this.handleUserToPromote(item.userName) }}>
-                                    <span title="Promote" className="glyphicon glyphicon-cog">
-                                    </span></Link>
-                                &nbsp;|&nbsp;
+                {props.users &&
+                    <tbody>
+                        {
+                            props.users.map((item, idx) =>
+                                <tr key={item.id}>
+                                    <td>{idx + 1}</td>
+                                    <td>{item.userName}</td>
+                                    <td>{item.email}</td>
+                                    <td>{item.roles}</td>
+                                    <td>
+                                        <Link to={`/users-detail/${item.userName}`}>
+                                            <span title="View detail" className="glyphicon glyphicon-cog">
+                                            </span></Link>
+                                        &nbsp;|&nbsp;
                                 <span title="Edit" className="glyphicon glyphicon-edit"></span>
-                                &nbsp;|&nbsp;
+                                        &nbsp;|&nbsp;
                                 <span title="Remove" className="glyphicon glyphicon-remove"></span>
-                            </td>
-                        </tr>
-                    )}
+                                    </td>
+                                </tr>
+                            )
+                        }
                 </tbody>
+                }
             </table>
         );
     }

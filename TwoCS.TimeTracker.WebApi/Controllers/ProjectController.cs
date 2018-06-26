@@ -17,6 +17,12 @@
             _projectService = projectService;
         }
 
+
+        /// <summary>
+        /// Project admin create a project
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [Authorize(Policy = "ProjectAdmin")]
         [HttpPost()]
         public async Task<IActionResult> Create([FromBody] AddProjectDto dto)
@@ -30,6 +36,10 @@
             return ResultOk(result);
         }
 
+        /// <summary>
+        /// Get all visible project with user's role 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet()]
         public async Task<IActionResult> Search()
         {

@@ -13,5 +13,7 @@
         public IEnumerable<UserDto> AssignedMembers { get; set; }
 
         public IEnumerable<ProjectDto> AssignedProjects { get; set; }
+
+        public UserDto Manager { get; set; }
     }
 }

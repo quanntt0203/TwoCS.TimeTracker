@@ -20,6 +20,7 @@
 
         [Authorize(AuthenticationSchemes = OAuthValidationDefaults.AuthenticationScheme)]
         [HttpGet("message")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> GetMessage()
         {
             var role = User.Claims.Where(s => s.Type == "role").FirstOrDefault()?.Value;

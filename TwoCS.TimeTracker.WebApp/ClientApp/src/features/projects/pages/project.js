@@ -22,6 +22,8 @@ class Project extends Component {
 
     componentWillReceiveProps(props) {
 
+        //debugger
+
         if (props.message) {
             if (props.message.type === "ERROR") {
                 toast.error(props.message.content);
@@ -31,9 +33,17 @@ class Project extends Component {
                 toast.success(props.message.content);
             }
         }
+
+        if (props.projects) {
+            this.setState({ projects: props.projects });
+            this.renderProjectsTable();
+        }
     }
 
-    renderProjectsTable(props) {
+    renderProjectsTable() {
+
+        const { projects } = this.state;
+
         return (
             <table className='table'>
                 <thead>
@@ -47,7 +57,7 @@ class Project extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {props.projects.map((project,idx) =>
+                    {projects.map((project,idx) =>
                         <tr key={project.id}>
                             <td>{idx+1}</td>
                             <td>{project.name}</td>
@@ -64,7 +74,7 @@ class Project extends Component {
         return (
             <div>
                 <h2>Project List</h2>
-                {this.renderProjectsTable(this.props)}
+                {this.renderProjectsTable()}
             </div>
         );
     }

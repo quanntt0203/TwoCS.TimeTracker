@@ -11,6 +11,7 @@ namespace TwoCS.TimeTracker.Services
     using TwoCS.TimeTracker.Core.Extensions;
     using TwoCS.TimeTracker.Core.Helpers;
     using TwoCS.TimeTracker.Dto;
+    using Microsoft.Extensions.Configuration;
 
     public class ProxyService : IProxyService
     {

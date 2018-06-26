@@ -7,6 +7,7 @@ import * as Account from "../features/accounts/store/Account";
 import * as Project from "../features/projects/ProjectStore";
 import * as User from "../features/users/UserStore";
 import * as Tracker from "../features/trackers/TrackerStore";
+import * as Report from "../features/reports/ReportStore";
 
 export default function configureStore(history, initialState) {
   const reducers = {
@@ -15,7 +16,8 @@ export default function configureStore(history, initialState) {
       account: Account.reducer,
       project: Project.reducer,
       user: User.reducer,
-      tracker: Tracker.reducer
+      tracker: Tracker.reducer,
+      report: Report.reducer
   };
 
   const middleware = [

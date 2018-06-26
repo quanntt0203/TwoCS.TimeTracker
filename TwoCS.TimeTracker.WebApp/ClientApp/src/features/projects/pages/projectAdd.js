@@ -51,7 +51,7 @@ class ProjectAdd extends Component {
     }
 
     componentWillReceiveProps(props) {
-        debugger
+
         if (props.message) {
             if (props.message.type === "ERROR") {
                 toast.error(props.message.content);
@@ -62,7 +62,7 @@ class ProjectAdd extends Component {
             }
         }
 
-        if (props.item) {
+        if (props.project) {
             this.props.history.push("/projects");
         }
     }

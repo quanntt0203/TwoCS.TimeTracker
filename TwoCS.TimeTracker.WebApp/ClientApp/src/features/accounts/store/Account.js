@@ -8,32 +8,36 @@ const requestRegisterType = "REQUEST_REGISTER";
 const requestRegisterSuccessType = "REQUEST_REGISTER_SUCCESS";
 const requestRegisterErrorType = "REQUEST_REGISTER_ERROR";
 const requestSignInType = "REQUEST_LOGIN";
-const requestSignOutType = "REQUEST_LOGOUT";
 const requestSignInSuccessType = "REQUEST_LOGIN_SUCCESS";
 const requestSignInErrorType = "REQUEST_LOGIN_ERROR";
-const requestSignOutSuccessType = "REQUEST_LOGOUT_SUCCESS"
+const requestSignOutType = "REQUEST_LOGOUT";
+const requestSignOutSuccessType = "REQUEST_LOGOUT_SUCCESS";
+const requestSignOutErrorType = "REQUEST_LOGOUT_ERROR";
 
-
-const initialState = { user: null, isAuthenticated: false, message: null };
+const initialState = { user: null, isAuthenticated: false, message: null, loading: false };
 
 export const actionCreators = {
   requestLogin: params => async (dispatch, getState) => {
-        if (getState().account.isAuthenticated) {
+      if (getState().account.isAuthenticated) {
           return;
-        }
+      }
 
-        dispatch({ type: requestSignInType });
-        const end_point = `/oauth/connect-token`;
-        const response = await request({
+      dispatch({ type: requestSignInType });
+
+      const end_point = `/oauth/connect-token`;
+      const response = await request({
           url: `${end_point}`,
           method: "POST",
-            baseURL: config.apiGateway.API_URL,
+          baseURL: config.apiGateway.API_URL,
           data: params
       });
 
 
       if (response.data.message === 'Ok') {
-          localStorage.setItem(appTokenSchema, response.data.result.access_token);
+
+          const { token, identity } = response.data.result;
+          localStorage.setItem("identity", JSON.stringify(identity));
+          localStorage.setItem(appTokenSchema, token.access_token);
           dispatch({
               type: requestSignInSuccessType,
               message: {
@@ -54,8 +58,40 @@ export const actionCreators = {
       }
     },
     requestLogout: params => async (dispatch, getState) => {
+
         localStorage.removeItem(appTokenSchema);
-        dispatch({ type: requestSignOutSuccessType });
+        localStorage.removeItem("identity");
+
+        dispatch({ type: requestSignOutType });
+
+        const end_point = `/api/user/signout`;
+        const response = await request({
+            url: `${end_point}`,
+            method: "GET",
+            baseURL: config.apiGateway.API_URL
+        });
+
+        if (response.data.message === 'Ok') {
+
+            
+            dispatch({
+                type: requestSignOutSuccessType,
+                message: {
+                    type: "SUCCESS",
+                    content: response.data.message
+                }
+            });
+
+        } else {
+
+            dispatch({
+                type: requestSignOutErrorType,
+                message: {
+                    type: "SUCCESS",
+                    content: response.data.message
+                } });
+        }
+        
     },
     requestRegister: params => async (dispatch, getState) => {
 
@@ -69,7 +105,11 @@ export const actionCreators = {
         });
 
         if (response.data.message === 'Ok') {
-            localStorage.setItem(appTokenSchema, response.data.result.access_token);
+
+            const { token, identity } = response.data.result;
+            localStorage.setItem("identity", JSON.stringify(identity));
+            localStorage.setItem(appTokenSchema, token.access_token);
+
             dispatch({
                 type: requestRegisterSuccessType,
                 message: {
@@ -96,8 +136,10 @@ export const reducer = (state, action) => {
 
   if (action.type === requestSignInType) {
     return {
-      ...state,
-      isAuthenticated: false
+        ...state,
+        loading: true,
+        isAuthenticated: false,
+        message: null
     };
   }
 
@@ -117,17 +159,38 @@ export const reducer = (state, action) => {
         };
     }
 
-    if (action.type === requestSignOutSuccessType) {
+    // signout
+    if (action.type === requestSignOutType) {
         return {
             ...state,
-            isAuthenticated: false
+            loading: true,
+            isAuthenticated: false,
+            message: null
         }
     }
 
+    if (action.type === requestSignOutSuccessType) {
+        return {
+            ...state,
+            isAuthenticated: false,
+            message: action.message
+        }
+    }
+
+    if (action.type === requestSignOutErrorType) {
+        return {
+            ...state,
+            message: action.message
+        }
+    }
+
+    // register
     if (action.type === requestRegisterType) {
         return {
             ...state,
-            isAuthenticated: false
+            isAuthenticated: false,
+            loading: true,
+            message: null
         };
     }
 
@@ -146,5 +209,9 @@ export const reducer = (state, action) => {
         };
     }
 
-  return state;
+    
+    
+
+
+    return state;
 };

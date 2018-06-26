@@ -19,6 +19,21 @@
 
         public DateTime? EndTime { get; set; }
 
+        public DateTime StartDate {
+            get
+            {
+                return StartTime.Date;
+            }
+        }
+
+        public DateTime? EndDate
+        {
+            get
+            {
+                return EndTime?.Date;
+            }
+        }
+
         public int Duration { get; set; }
 
         public string CapturedInfo { get; set; }

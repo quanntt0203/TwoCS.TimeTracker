@@ -28,6 +28,7 @@
         // POST: /Account/Register
         [HttpPost("register")]
         [AllowAnonymous]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
         {
             //EnsureDatabaseCreated(_applicationDbContext);
@@ -59,6 +60,7 @@
         // POST: /Account/Register
         [HttpPost("roles")]
         [AllowAnonymous]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> AddRole([FromBody] AddRoleViewModel model)
         {
             //EnsureDatabaseCreated(_applicationDbContext);

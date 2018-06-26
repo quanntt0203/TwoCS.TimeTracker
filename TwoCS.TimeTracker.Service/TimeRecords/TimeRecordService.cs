@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using TwoCS.TimeTracker.Core.Extensions;
+    using TwoCS.TimeTracker.Core.Helpers;
     using TwoCS.TimeTracker.Core.Repositories;
     using TwoCS.TimeTracker.Core.Services;
     using TwoCS.TimeTracker.Core.Settings;
@@ -33,7 +34,6 @@
 
         public async Task<TimeRecordDto> CreateAsync(string userName, AddTimeRecordDto dto)
         {
-
             var project = await _projectRepository.SingleAsync(s => s.Name == dto.ProjectId);
 
             var user = await _userRepository.SingleAsync(s => s.UserName == userName);
@@ -44,9 +44,13 @@
                 throw new BadRequestException("Invalid project or user.");
             }
 
+            ILocationService locationService = new LocationService();
+
+            var location = await locationService.GetLocactionAsync(AppContext.Value.Connection.RemoteIpAddress.MapToIPv4().ToString());
+
             var entity = dto.ToEntity();
 
-            //entity.SetAudit(AppContext.Value);
+            entity.SetAudit(AppContext.Value);
 
             entity.ProjectId = project.Id;
 
@@ -57,6 +61,8 @@
             entity.User = user;
 
             entity.LogTimeRecords = new List<LogTimeRecord>();
+
+            entity.CapturedInfo = location?.ObjToJson();
 
             entity = await CreateAsync(entity);
 
@@ -104,7 +110,8 @@
 
             bool isSuperAdmin = user.Roles.Contains(RoleSetting.ROLE_ADMIN);
 
-            if (user.Roles.Contains(RoleSetting.ROLE_MANAGER))
+            if (user.Roles.Contains(RoleSetting.ROLE_MANAGER) &&
+                user.AssignedMembers?.Count() > 0)
             {
                 userList.AddRange(user.AssignedMembers?.Select(m => m.UserName));
             }

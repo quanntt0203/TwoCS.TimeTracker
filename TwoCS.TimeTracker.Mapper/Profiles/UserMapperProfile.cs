@@ -13,17 +13,26 @@
             #region Entity To Dto
 
             CreateMap<User, UserDto>()
-                .ForMember(x => x.IsValid, opt => opt.Ignore())
-                .ForMember(x => x.Errors, opt => opt.Ignore())
+                //.ForMember(x => x.IsValid, opt => opt.Ignore())
+                //.ForMember(x => x.Errors, opt => opt.Ignore())
                 .ForMember(x => x.AssignedMembers, opt => opt.Ignore())
                 .ForMember(x => x.AssignedProjects, opt => opt.Ignore())
+                .ForMember(x => x.Manager, opt => opt.Ignore())
                 .AfterMap((src, dest) =>
                 {
                     //TODO
-                    dest.AssignedMembers = src.AssignedMembers?.Select(s => s.ToDto());
+                    dest.AssignedMembers = src.AssignedMembers?.Select(s => new UserDto
+                    {
+                        Email = s.Email,
+                        UserName = s.UserName
+                    });
 
                     dest.AssignedProjects = src.AssignedProjects?.Select(s => s.ToDto());
 
+                    dest.Manager = src.Magager != null ? new UserDto {
+                        Email = src.Magager.Email,
+                        UserName = src.Magager.UserName
+                    } : null;
                 });
             #endregion
 

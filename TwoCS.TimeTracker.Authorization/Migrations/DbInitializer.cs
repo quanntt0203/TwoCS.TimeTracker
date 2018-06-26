@@ -90,16 +90,17 @@
                 {
                     var user = await userManager.FindByNameAsync(userName);
                     await userManager.AddToRoleAsync(user, role);
+
+
+                    var entityUser = new Domain.Models.User
+                    {
+                        UserName = userName,
+                        Email = email,
+                        Roles = new List<string>() { role }
+                    };
+
+                    await userRepository.CreateAsync(entityUser);
                 }
-
-                var entityUser = new Domain.Models.User
-                {
-                    UserName = userName,
-                    Email = email,
-                    Roles = new List<string>() { role }
-                };
-
-                await userRepository.CreateAsync(entityUser);
             }
         }
     }

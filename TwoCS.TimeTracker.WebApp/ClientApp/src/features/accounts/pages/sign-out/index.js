@@ -22,12 +22,21 @@ class SignOut extends Component {
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.props.requestLogout();
     }
 
     componentWillReceiveProps(props) {
+
+        //debugger
+
         this.props.history.push("/sign-in");
+
+        if (props.isAuthenticated === false) {
+
+            this.props.history.push("/sign-in");
+        }
+        
     }
 
     render() {

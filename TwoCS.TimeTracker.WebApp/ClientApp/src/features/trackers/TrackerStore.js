@@ -237,7 +237,8 @@ export const reducer = (state, action) => {
     if (action.type === requestProjectListType) {
         return {
             ...state,
-            loading: true
+            loading: true,
+            message: null
         };
     }
 
@@ -262,7 +263,7 @@ export const reducer = (state, action) => {
         return {
             ...state,
             loading: true,
-            trackers: []
+            message: null
         };
     }
 
@@ -287,7 +288,6 @@ export const reducer = (state, action) => {
         return {
             ...state,
             loading: true,
-            records: [],
             message: null
         };
     }
@@ -304,8 +304,7 @@ export const reducer = (state, action) => {
         return {
             ...state,
             loading: false,
-            message: action.message,
-            records: []
+            message: action.message
         };
     }
 
@@ -314,7 +313,7 @@ export const reducer = (state, action) => {
         return {
             ...state,
             loading: true,
-            record: null
+            message: null
         };
     }
 
@@ -343,7 +342,7 @@ export const reducer = (state, action) => {
         return {
             ...state,
             loading: true,
-            record: null
+            message: null
         };
     }
 
@@ -363,8 +362,7 @@ export const reducer = (state, action) => {
         return {
             ...state,
             loading: false,
-            message: action.message,
-            record: null
+            message: action.message
         };
     }
 
@@ -374,7 +372,7 @@ export const reducer = (state, action) => {
             ...state,
             loading: true,
             message: null,
-            logTime: null
+            records: []
         };
     }
 

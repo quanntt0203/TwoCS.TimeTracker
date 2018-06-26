@@ -32,6 +32,10 @@ class SignIn extends Component {
             this.props.history.push("/home");
         }
 
+        if (props.loading === true) {
+            toast.success('Loading ...');
+        }
+
         if (props.message) {
             if (props.message.type === "ERROR") {
                 toast.error(props.message.content);
@@ -64,8 +68,11 @@ class SignIn extends Component {
         const enabled =
             email.length > 0 &&
             password.length > 0;
-    return (
-      <Form onSubmit={this.handleSubmit}>
+        return (
+            <div style={{ 'border-radius': 5, padding: 10, 'background-color': '#accbe5', 'text-align': 'center', width: 400 }}>
+            <h3>Time Management</h3>
+        <Form onSubmit={this.handleSubmit}>
+            
         <FormGroup>
           <InputGroup>
             <InputGroup.Addon>
@@ -83,7 +90,7 @@ class SignIn extends Component {
         <FormGroup>
           <InputGroup>
             <InputGroup.Addon>
-              <Glyphicon glyph="info-sign" />
+            <Glyphicon glyph="eye-open" />
             </InputGroup.Addon>
             <FormControl
               type="password"
@@ -103,7 +110,8 @@ class SignIn extends Component {
                     Register
                 </Link>
         </FormGroup>
-      </Form>
+            </Form>
+        </div>
     );
   }
 }

@@ -37,6 +37,7 @@
         }
 
         [HttpPost("~/connect/token"), Produces("application/json")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> Exchange(OpenIdConnectRequest request)
         {
             Debug.Assert(request.IsTokenRequest(),

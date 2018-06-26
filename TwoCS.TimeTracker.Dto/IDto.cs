@@ -4,8 +4,8 @@
 
     public interface IDto
     {
-        bool IsValid { get; set; }
+        //bool IsValid { get; set; }
 
-        IEnumerable<string> Errors { get; set; }
+        //IEnumerable<string> Errors { get; set; }
     }
 }

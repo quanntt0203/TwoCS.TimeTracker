@@ -1,0 +1,32 @@
+﻿div.home-container {
+    float: left;
+    width: 100%;
+}
+
+div.home-navigator {
+    float: left;
+    width: 100%;
+}
+
+div.home-item {
+    float: left;
+    width: 250px;
+    height: 150px;
+    padding: 50px;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: antiquewhite;
+}
+
+div.projects{
+
+}
+
+div.users {
+}
+
+div.trackers {
+}
+
+div.reports {
+}

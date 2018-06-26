@@ -50,7 +50,7 @@ class Register extends Component {
 
     componentWillReceiveProps(props) {
 
-        debugger
+        //debugger
         if (props.isAuthenticated) {
             this.props.history.push("/home");
         }
@@ -72,7 +72,10 @@ class Register extends Component {
             username.length > 0 &&
             email.length > 0 &&
             password.length > 0;
-      return (
+
+        return (
+            <div style={{ 'border-radius': 5, padding: 10, 'background-color': '#accbe5', 'text-align': 'center', width: 400 }}>
+                <h3>Register new user</h3>
           <Form onSubmit={this.handleSubmit}>
               <FormGroup>
                   <InputGroup>
@@ -105,7 +108,7 @@ class Register extends Component {
               <FormGroup>
                   <InputGroup>
                       <InputGroup.Addon>
-                          <Glyphicon glyph="info-sign" />
+                                <Glyphicon glyph="eye-open" />
                       </InputGroup.Addon>
                       <FormControl
                           type="password"
@@ -125,7 +128,8 @@ class Register extends Component {
                       Cancel
                     </Button>
               </FormGroup>
-          </Form>
+                </Form>
+                </div>
       );
   }
 }

@@ -22,6 +22,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import 'react-dropdown/style.css'
 import "./dialog-ui.css";
+import { getIdentityRole } from "../../../shared/helper/identity";
 
 class TimeTracker extends Component {
     constructor(props) {
@@ -41,8 +42,8 @@ class TimeTracker extends Component {
             selectedProject: '',
             //============= record info
             minTime: moment(),
-            taskName: 'dgdgd dfdfd',
-            taskDescription: 'dfd dfdfdf',
+            taskName: 'Task name',
+            taskDescription: 'Task description',
             startTime: moment(),
             endTime: moment()
         };
@@ -146,13 +147,15 @@ class TimeTracker extends Component {
         props.projects.map((item, idx) =>
             options.push({ value: item.name, label: item.name })
         )
+        const role = getIdentityRole();
+        const enabled = !role.isAdmin;
         return (
              
             <div className="project-list">
                 Project List:
                 <br />
 
-                <Dropdown options={options} onChange={this.handleProjectChange} value={this.state.selectedProject} placeholder="Select a project" />
+                <Dropdown options={options} onChange={this.handleProjectChange} value={this.state.selectedProject} placeholder="Select a project" disabled={role.isAdmin} />
                 
                 <br />
             </div>
@@ -178,8 +181,8 @@ class TimeTracker extends Component {
                         <th>#</th>
                         <th>Name</th>
                         <th>Description</th>
-                        <th>StartTime</th>
-                        <th>EndTime</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
                         <th>Duration</th>
                         <th>Action</th>
                     </tr>
@@ -190,8 +193,8 @@ class TimeTracker extends Component {
                             <td>{idx + 1}</td>
                             <td>{item.name}</td>
                             <td>{item.description}</td>
-                            <td>{item.startTime}</td>
-                            <td>{item.endTime}</td>
+                            <td>{item.startDate}</td>
+                            <td>{item.endDate}</td>
                             <td>{item.duration}</td>
                             <td>
                                 <Link to={`/trackers-detail/${item.id}`}>
@@ -210,9 +213,12 @@ class TimeTracker extends Component {
     }
 
     render() {
+        const role = getIdentityRole();
+
         const { selectedProject } = this.state;
         const enabled =
-            selectedProject.length > 0;
+            selectedProject.length > 0 && selectedProject != 'All' && !role.isAdmin;
+
         return (
             <div className="container">
                 <h2>Time Tracker Management</h2>

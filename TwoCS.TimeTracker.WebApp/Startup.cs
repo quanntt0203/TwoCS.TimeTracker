@@ -1,5 +1,8 @@
 namespace TwoCS.TimeTracker.WebApp
 {
+    using System;
+    using System.IO;
+    using System.Reflection;
     using FluentValidation.AspNetCore;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -7,6 +10,7 @@ namespace TwoCS.TimeTracker.WebApp
     using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Swashbuckle.AspNetCore.Swagger;
     using TwoCS.TimeTracker.Authorization.Extensions;
     using TwoCS.TimeTracker.Authorization.Migrations;
     using TwoCS.TimeTracker.Core.Extensions;
@@ -45,10 +49,34 @@ namespace TwoCS.TimeTracker.WebApp
             services.AddDomainRepositories();
 
             // Add domain services
-            services.AddDomainServie();
+            services.AddDomainServies();
 
             // Add Database Initializer
             services.AddScoped<IDbInitializer, DbInitializer>();
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                //c.SwaggerDoc("v1", new Info { Title = "Time tracker - API docs", Version = "v1" });
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "Time tracker - API docs",
+                    Description = "Time tracker API documentations",
+                    TermsOfService = "None",
+                    Contact = new Contact
+                    {
+                        Name = "2Click Solutions",
+                        Email = string.Empty,
+                        Url = "https://github.com/quanntt0203"
+                    }
+                });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"TimeTrackerApi.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -82,6 +110,17 @@ namespace TwoCS.TimeTracker.WebApp
             app.UseStaticFiles();
 
             app.UseSpaStaticFiles();
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Time tracker - API docs V1");
+                c.RoutePrefix = "docs";
+            });
 
             app.UseMvc(routes =>
             {

@@ -13,4 +13,9 @@
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TwoCS.TimeTracker.Data\TwoCS.TimeTracker.Data.csproj" />
+    <ProjectReference Include="..\TwoCS.TimeTracker.WebApi\TwoCS.TimeTracker.WebApi.csproj" />
+  </ItemGroup>
+
 </Project>

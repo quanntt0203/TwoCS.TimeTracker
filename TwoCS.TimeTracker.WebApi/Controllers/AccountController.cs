@@ -21,6 +21,11 @@
             _userService = userService;
         }
 
+        /// <summary>
+        /// User registers a new account with User role
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost("register-user")]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
@@ -34,7 +39,13 @@
 
             var result = await _proxyService.GetTokenAsync(account.Email, dto.Password);
 
-            return ResultOk(result);
+            var output = new
+            {
+                identity = account,
+                token = result
+            };
+
+            return ResultOk(output);
         }
     }
 }

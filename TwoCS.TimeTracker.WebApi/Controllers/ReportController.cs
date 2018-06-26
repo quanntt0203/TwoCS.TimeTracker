@@ -19,10 +19,21 @@
             _reportService = reportService;
         }
 
-        
+
+        /// <summary>
+        /// User runs the time tracker report
+        /// </summary>
+        /// <param name="reportType">Report will be displayed by daily, weekly or monthly.</param>
+        /// <param name="groupType">Report will be grouped by project or user.</param>
+        /// <param name="project">The selected project for filtering report.</param>
+        /// <param name="user">The selected user for filtering report.</param>
+        /// <param name="startDate">The start date value for filtering report.</param>
+        /// <param name="endDate">The end date value for filtering report.</param>
+        /// <returns></returns>
         [HttpGet()]
         public async Task<IActionResult> SearchAsync(
             [FromQuery] ReportTypeEnum reportType,
+            [FromQuery] ReportGroupTypeEnum groupType,
             [FromQuery] string project,
             [FromQuery] string user,
             [FromQuery] DateTime? startDate,
@@ -32,6 +43,7 @@
             var paramDto = new ReportParamDto
             {
                 ReportType = reportType,
+                GroupBy = groupType,
                 Project = project,
                 User = user,
                 StartDate = startDate,
